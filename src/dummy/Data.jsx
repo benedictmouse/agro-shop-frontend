@@ -1,0 +1,348 @@
+
+const DUMMY = [
+    {
+        ID: 1,
+        img: "https://m.media-amazon.com/images/I/6125yAfsJKL._AC_UX575_.jpg",
+        title: "Nike Air Monarch IV",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "200",
+        company: "Nike",
+        color: "white",
+        category: "sneakers",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 2,
+        img: "https://m.media-amazon.com/images/I/519MRhRKGFL._AC_UX575_.jpg",
+        title: "Nike Air Vapormax Plus",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "200",
+        company: "Nike",
+        color: "red",
+        category: "sneakers",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+
+    {
+        ID: 3,
+        img: "https://m.media-amazon.com/images/I/51+P9uAvb1L._AC_UY695_.jpg",
+        title: "Nike Waffle One Sneaker",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "200",
+        company: "Nike",
+        color: "green",
+        category: "sneakers",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 4,
+        img: "https://m.media-amazon.com/images/I/71oEKkghg-L._AC_UX575_.jpg",
+        title: "Nike Running Shoe",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "200",
+        company: "Adidas",
+        color: "black",
+        category: "sneakers",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 5,
+        img: "https://m.media-amazon.com/images/I/41M54ztS6IL._AC_SY625._SX._UX._SY._UY_.jpg",
+        title: "Flat Slip On Pumps",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "200",
+        company: "Vans",
+        color: "green",
+        category: "flats",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 6,
+        img: "https://m.media-amazon.com/images/I/71zKuNICJAL._AC_UX625_.jpg",
+        title: "Knit Ballet Flat",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "50",
+        company: "Adidas",
+        color: "black",
+        category: "flats",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+
+    {
+        ID: 7,
+        img: "https://m.media-amazon.com/images/I/61V9APfz97L._AC_UY695_.jpg",
+        title: "Loafer Flats",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "50",
+        company: "Vans",
+        color: "white",
+        category: "flats",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+
+    {
+        ID: 8,
+        img: "https://m.media-amazon.com/images/I/71VaQ+V6XnL._AC_UY695_.jpg",
+        title: "Nike Zoom Freak",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "200",
+        company: "Nike",
+        color: "green",
+        category: "sneakers",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+
+    {
+        ID: 9,
+        img: "https://m.media-amazon.com/images/I/61-cBsLhJHL._AC_UY695_.jpg",
+        title: "Nike Men's Sneaker",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "200",
+        company: "Adidas",
+        color: "blue",
+        category: "sneakers",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+
+    {
+        ID: 10,
+        img: "https://m.media-amazon.com/images/I/81xXDjojYKS._AC_UX575_.jpg",
+        title: "PUMA BLACK-OCE",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "150",
+        company: "Puma",
+        color: "green",
+        category: "sneakers",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 11,
+        img: "https://m.media-amazon.com/images/I/71E75yRwCDL._AC_UY575_.jpg",
+        title: "Pacer Future Sneaker",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "150",
+        company: "Puma",
+        color: "red",
+        category: "sneakers",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 12,
+        img: "https://m.media-amazon.com/images/I/71jeoX0rMBL._AC_UX575_.jpg",
+        title: "Unisex-Adult Super",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "150",
+        company: "Puma",
+        color: "black",
+        category: "sneakers",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 13,
+        img: "https://m.media-amazon.com/images/I/61TM6Q9dvxL._AC_UX575_.jpg",
+        title: "Roma Basic Sneaker",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "150",
+        company: "Puma",
+        color: "white",
+        category: "sneakers",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 14,
+        img: "https://m.media-amazon.com/images/I/7128-af7joL._AC_UY575_.jpg",
+        title: "Pacer Future Doubleknit",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "150",
+        company: "Puma",
+        color: "black",
+        category: "sneakers",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+
+    {
+        ID: 15,
+        img: "https://m.media-amazon.com/images/I/81xXDjojYKS._AC_UX575_.jpg",
+        title: "Fusion Evo Golf Shoe",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "100",
+        company: "Puma",
+        color: "green",
+        category: "sneakers",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 16,
+        img: "https://m.media-amazon.com/images/I/719gdz8lsTS._AC_UX575_.jpg",
+        title: "Rainbow Chex Skate",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "100",
+        company: "Vans",
+        color: "red",
+        category: "flats",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 17,
+        img: "https://m.media-amazon.com/images/I/71gpFHJlnoL._AC_UX575_.jpg",
+        title: "Low-Top Trainers",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "100",
+        company: "Vans",
+        color: "white",
+        category: "sandals",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 18,
+        img: "https://m.media-amazon.com/images/I/71pf7VFs9CL._AC_UX575_.jpg",
+        title: "Vans Unisex Low-Top",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "100",
+        company: "Vans",
+        color: "blue",
+        category: "sandals",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 19,
+        img: "https://m.media-amazon.com/images/I/61N4GyWcHPL._AC_UY575_.jpg",
+        title: "Classic Bandana Sneakers",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "50",
+        company: "Nike",
+        color: "black",
+        category: "sandals",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 20,
+        img: "https://m.media-amazon.com/images/I/61bncQ44yML._AC_UX695_.jpg",
+        title: "Chunky High Heel",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "50",
+        company: "Vans",
+        color: "black",
+        category: "heels",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 21,
+        img: "https://m.media-amazon.com/images/I/71czu7WgGuL._AC_UY695_.jpg",
+        title: "Slip On Stiletto High Heel",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "100",
+        company: "puma",
+        color: "black",
+        category: "heels",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 22,
+        img: "https://m.media-amazon.com/images/I/61men05KRxL._AC_UY625_.jpg",
+        title: "DREAM PAIRS Court Shoes",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "150",
+        company: "Nike",
+        color: "red",
+        category: "heels",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 23,
+        img: "https://m.media-amazon.com/images/I/519MRhRKGFL._AC_UX575_.jpg",
+        title: "Nike Air Vapormax Plus",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "200",
+        company: "Nike",
+        color: "red",
+        category: "sneakers",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+
+    {
+        ID: 24,
+        img: "https://m.media-amazon.com/images/I/51PGWTXgf-L._AC_UY625_.jpg",
+        title: "Low Mid Block Heels",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "200",
+        company: "Nike",
+        color: "black",
+        category: "heels",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 25,
+        img: "https://m.media-amazon.com/images/I/616sA5XUKtL._AC_UY675_.jpg",
+        title: "Chunky High Heel",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "50",
+        company: "Adidas",
+        color: "black",
+        category: "heels",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 26,
+        img: "https://m.media-amazon.com/images/I/71h5+MbEK7L._AC_UY625_.jpg",
+        title: "Amore Fashion Stilettos",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "150",
+        company: "Adidas",
+        color: "white",
+        category: "heels",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 27,
+        img: "https://m.media-amazon.com/images/I/61uw5RDxKQL._AC_UY625_.jpg",
+        title: "Bridal Sandals Glitter",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "50",
+        company: "Adidas",
+        color: "black",
+        category: "heels",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+    {
+        ID: 28,
+        img: "https://m.media-amazon.com/images/I/71yhoZP0l6L._AC_UY695_.jpg",
+        title: "Wedding Prom Bridal",
+        stock: "5",
+        reviews: "(123 reviews)",
+        newPrice: "50",
+        company: "Adidas",
+        color: "black",
+        category: "flats",
+        Description: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Exercitationem voluptates optio cumque expedita, eos vitae quod atque vero, natus voluptas laboriosam. Omnis perspiciatis, expedita libero, quas velit error non, modi earum suscipit animi voluptatum vitae sed aliquam commodi ipsum deleniti ipsa laudantium ducimus illo sint! Dolorum quisquam omnis laudantium, assumenda odio vero vel dolorem dicta iste voluptate optio ut, odit tempora placeat sint! Consequuntur iure libero commodi eius, sit accusantium ut similique odio vero at ipsa sequi voluptates, voluptatibus ullam minima totam aut veniam nihil doloribus amet nostrum. Tenetur, explicabo laudantium facere, velit blanditiis ipsa praesentium aut vitae unde molestiae, exercitationem eveniet magnam! Ad iure neque tempore iste illum dolores quaerat, veniam, excepturi, quibusdam enim similique. Quibusdam, temporibus optio. Explicabo necessitatibus soluta aliquid consequatur, dignissimos voluptas nesciunt cum. Rerum qui, molestiae, quam quidem sint consectetur odit nisi recusandae rem aut accusamus."
+    },
+];
+
+export default DUMMY;
