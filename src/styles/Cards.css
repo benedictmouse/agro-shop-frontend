@@ -36,7 +36,7 @@
   margin-bottom: 1rem;
 }
 
-.filter-btn {
+.filter-bttn {
   padding: 0.5rem 1rem;
   background-color: var(--lighter);
   color: var(--dark);
@@ -47,12 +47,12 @@
   transition: var(--transition);
 }
 
-.filter-btn:hover {
+.filter-bttn:hover {
   background-color: var(--primary-light);
   color: var(--primary-dark);
 }
 
-.filter-btn.active {
+.filter-bttn.active {
   background-color: var(--primary);
   color: white;
 }

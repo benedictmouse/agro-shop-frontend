@@ -21,7 +21,7 @@ const Cards = ({ products }) => {
           {categories.map(category => (
             <button
               key={category}
-              className={`filter-btn ${selectedCategory === category ? 'active' : ''}`}
+              className={`filter-bttn ${selectedCategory === category ? 'active' : ''}`}
               onClick={() => setSelectedCategory(category)}
             >
               {category}

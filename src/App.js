@@ -1,10 +1,14 @@
+// src/App.js
+import React from 'react';
+import BaseRouter from './routing/Routes';
+import { AuthProvider } from './context/AuthContext'
 import './App.css';
-import BaseRouter from './routing/Routes'
-
 
 function App() {
   return (
-   <BaseRouter/>
+    <AuthProvider>
+      <BaseRouter />
+    </AuthProvider>
   );
 }
 

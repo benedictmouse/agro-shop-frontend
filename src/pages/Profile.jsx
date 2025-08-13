@@ -1,198 +1,460 @@
-import React, { useState } from 'react';
-import { FiUser, FiMail, FiMapPin, FiSave, FiLogOut, FiTrash2,FiShoppingCart } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiLogOut, FiEdit2, FiSave, FiX } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 import appLinks from '../routing/Links';
 import '../styles/Profile.css';
 
-const Profile = ({ orders = [] }) => { // Default to empty array
+const Profile = () => {
+  const { logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+  
   const [userData, setUserData] = useState({
-    name: 'Agro Shopper',
-    email: 'user@agroshop.com',
-    number: '0712345671',
+    id: '',
+    email: '',
+    first_name: '',
+    last_name: '',
+    role: ''
   });
+  
+  const [passwordData, setPasswordData] = useState({
+    old_password: '',
+    new_password: '',
+    confirm_new_password: ''
+  });
+  
+  const [showPasswords, setShowPasswords] = useState({
+    old: false,
+    new: false,
+    confirm: false
+  });
+  
   const [isEditing, setIsEditing] = useState(false);
-  const [formMessage, setFormMessage] = useState('');
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ type: '', text: '' });
+  const [errors, setErrors] = useState({});
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUserData(prev => ({ ...prev, [name]: value }));
-  };
+  // Get auth token
+  const getAuthToken = () => localStorage.getItem('access_token');
 
-  const handleSave = (e) => {
-    e.preventDefault();
-    if (!userData.name || !userData.email || !userData.address) {
-      setFormMessage('Please fill in all fields.');
-      return;
-    }
-    if (!/\S+@\S+\.\S+/.test(userData.email)) {
-      setFormMessage('Please enter a valid email address.');
-      return;
-    }
-    setFormMessage('Profile updated successfully!');
-    setIsEditing(false);
-    setTimeout(() => setFormMessage(''), 3000);
-    // TODO: Save to backend or localStorage
-  };
+  // API headers
+  const getHeaders = () => ({
+    'Authorization': `Bearer ${getAuthToken()}`,
+    'Content-Type': 'application/json'
+  });
 
-  const handleLogout = () => {
-    if (window.confirm('Are you sure you want to log out?')) {
-      // TODO: Implement logout logic
-      alert('Logged out successfully.');
-    }
-  };
-
-  const handleDeleteAccount = () => {
-    if (window.confirm('Are you sure you want to delete your account? This cannot be undone.')) {
-      // TODO: Implement account deletion logic
-      alert('Account deleted successfully.');
+  // Refresh token
+  const refreshToken = async () => {
+    try {
+      const refresh = localStorage.getItem('refresh_token');
+      if (!refresh) throw new Error('No refresh token available');
+      
+      const response = await axios.post('http://localhost:8000/api/token/refresh/', { refresh }, {
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      localStorage.setItem('access_token', response.data.access);
+      return response.data.access;
+    } catch (error) {
+      console.error('Token refresh error:', error);
+      logout();
+      setMessage({ type: 'error', text: 'Session expired. Please log in again.' });
+      setTimeout(() => navigate(appLinks.Login), 1500);
+      throw error;
     }
   };
 
-  // Filter orders for the current user (placeholder: "Guest User")
-  const userOrders = Array.isArray(orders) ? orders.filter(order => order.customer === 'Guest User') : [];
+  // Axios interceptor for 401 handling
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      response => response,
+      async error => {
+        if (error.response?.status === 401) {
+          try {
+            const newAccessToken = await refreshToken();
+            error.config.headers.Authorization = `Bearer ${newAccessToken}`;
+            return axios(error.config);
+          } catch (refreshError) {
+            return Promise.reject(refreshError);
+          }
+        }
+        return Promise.reject(error);
+      }
+    );
+    return () => axios.interceptors.response.eject(interceptor);
+  }, []);
+
+  // Fetch profile data
+  const fetchProfile = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get('http://localhost:8000/users/profile/', { headers: getHeaders() });
+      setUserData(response.data);
+    } catch (error) {
+      setMessage({ type: 'error', text: 'Failed to load profile data' });
+      console.error('Fetch profile error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Update profile
+  const updateProfile = async () => {
+    try {
+      setLoading(true);
+      setErrors({});
+      
+      const response = await axios.patch('http://localhost:8000/users/profile/', {
+        first_name: userData.first_name,
+        last_name: userData.last_name
+      }, { headers: getHeaders() });
+
+      setUserData(response.data);
+      setIsEditing(false);
+      setMessage({ type: 'success', text: 'Profile updated successfully!' });
+    } catch (error) {
+      setErrors(error.response?.data || {});
+      setMessage({ type: 'error', text: 'Failed to update profile' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Change password
+  const changePassword = async () => {
+    try {
+      setLoading(true);
+      setErrors({});
+      
+      // Client-side validation
+      if (!passwordData.old_password || !passwordData.new_password || !passwordData.confirm_new_password) {
+        setErrors({ general: 'All fields are required' });
+        return;
+      }
+      if (passwordData.new_password !== passwordData.confirm_new_password) {
+        setErrors({ new_password: 'Passwords do not match' });
+        return;
+      }
+      if (passwordData.new_password.length < 8) {
+        setErrors({ new_password: 'Password must be at least 8 characters long' });
+        return;
+      }
+
+      const response = await axios.patch('http://localhost:8000/users/changepassword/', passwordData, {
+        headers: getHeaders()
+      });
+
+      setPasswordData({
+        old_password: '',
+        new_password: '',
+        confirm_new_password: ''
+      });
+      setShowPasswordForm(false);
+      setMessage({ type: 'success', text: 'Password changed successfully! Please log in again.' });
+      
+      setTimeout(() => {
+        logout();
+        navigate(appLinks.Login);
+      }, 1500);
+    } catch (error) {
+      const errorData = error.response?.data || {};
+      setErrors(errorData);
+      setMessage({ 
+        type: 'error', 
+        text: errorData.old_password?.[0] || 
+              errorData.new_password?.[0] || 
+              errorData.confirm_new_password?.[0] || 
+              'Failed to change password'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle input changes
+  const handleInputChange = (field, value) => {
+    setUserData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handlePasswordChange = (field, value) => {
+    setPasswordData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Toggle password visibility
+  const togglePasswordVisibility = (field) => {
+    setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }));
+  };
+
+  // Clear messages
+  const clearMessage = () => setMessage({ type: '', text: '' });
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  useEffect(() => {
+    if (message.text) {
+      const timer = setTimeout(clearMessage, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
+
+  if (loading && !userData.id) {
+    return (
+      <div className="profile-loading-screen">
+        <div className="profile-loading-spinner">
+          <div className="profile-spinner-circle"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="profile-container">
-      <h1 className="profile-title">My Profile</h1>
-      <p className="profile-subtitle">Manage your personal information and view your order history.</p>
-
       <div className="profile-content">
-        <div className="profile-section profile-info">
-          <h2 className="section-title">Personal Information</h2>
-          <form className="profile-form" onSubmit={handleSave}>
-            <div className="form-group">
-              <label htmlFor="name">Name</label>
-              <div className="input-wrapper">
-                <FiUser className="input-icon" />
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={userData.name}
-                  onChange={handleChange}
-                  placeholder="Your Name"
-                  disabled={!isEditing}
-                  required
-                />
-              </div>
+        {/* Header */}
+        <div className="profile-header">
+          <div className="profile-header-content">
+            <div className="profile-avatar">
+              <FiUser className="profile-avatar-icon" />
             </div>
-            <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <div className="input-wrapper">
-                <FiMail className="input-icon" />
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={userData.email}
-                  onChange={handleChange}
-                  placeholder="Your Email"
-                  disabled={!isEditing}
-                  required
-                />
-              </div>
+            <div className="profile-header-text">
+              <h1 className="profile-title">Profile Settings</h1>
+              <p className="profile-subtitle">Manage your account information and security</p>
             </div>
-            <div className="form-group">
-              <label htmlFor="address">Phone number</label>
-              <div className="input-wrapper">
-                <FiMapPin className="input-icon" />
-                <input
-                  type="number"
-                  id="number"
-                  name="number"
-                  value={userData.number}
-                  onChange={handleChange}
-                  placeholder="Your Address"
-                  disabled={!isEditing}
-                  required
-                />
-              </div>
-            </div>
-            {isEditing ? (
-              <div className="form-actions">
-                <button type="submit" className="save-btn">
-                  <FiSave className="action-icon" />
-                  Save Changes
-                </button>
-                <button
-                  type="button"
-                  className="cancel-btn"
-                  onClick={() => setIsEditing(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            ) : (
-              <button
-                type="button"
-                className="edit-btn"
-                onClick={() => setIsEditing(true)}
-              >
-                Edit Profile
-              </button>
-            )}
-            {formMessage && (
-              <p className={`form-message ${formMessage.includes('successfully') ? 'success' : 'error'}`}>
-                {formMessage}
-              </p>
-            )}
-          </form>
-          <div className="account-actions">
-            <button className="logout-btn" onClick={handleLogout}>
-              <FiLogOut className="action-icon" />
-              Log Out
-            </button>
-            <button className="delete-account-btn" onClick={handleDeleteAccount}>
-              <FiTrash2 className="action-icon" />
-              Delete Account
-            </button>
           </div>
         </div>
 
-        <div className="profile-section profile-orders">
-          <h2 className="section-title">Order History</h2>
-          {userOrders.length === 0 ? (
-            <div className="no-orders">
-              <p>No orders found.</p>
-              <Link to={appLinks.home} className="shop-now-btn">
-                <FiShoppingCart className="action-icon" />
-                Shop Now
-              </Link>
+        {/* Messages */}
+        {message.text && (
+          <div className={`profile-message profile-message-${message.type}`}>
+            <div className="profile-message-content">
+              <span className="profile-message-icon">
+                {message.type === 'success' ? '✓' : '⚠'}
+              </span>
+              <span>{message.text}</span>
+              <button onClick={clearMessage} className="profile-message-close">
+                <FiX />
+              </button>
             </div>
-          ) : (
-            <table className="orders-table">
-              <thead>
-                <tr>
-                  <th>Order ID</th>
-                  <th>Items</th>
-                  <th>Total Price</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {userOrders.map((order) => (
-                  <tr key={order.orderId}>
-                    <td>{order.orderId}</td>
-                    <td>
-                      {order.items.map(item => (
-                        <div key={item.ID}>
-                          {item.title} (Qty: {item.quantity})
+          </div>
+        )}
+
+        <div className="profile-grid">
+          {/* Profile Information */}
+          <div className="profile-info-section">
+            <div className="profile-card">
+              <div className="profile-card-header">
+                <h2 className="profile-card-title">Personal Information</h2>
+                {!isEditing ? (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="profile-edit-button"
+                  >
+                    <FiEdit2 className="profile-button-icon" />
+                    <span>Edit</span>
+                  </button>
+                ) : (
+                  <div className="profile-action-buttons">
+                    <button
+                      onClick={updateProfile}
+                      disabled={loading}
+                      className="profile-save-button"
+                    >
+                      <FiSave className="profile-button-icon" />
+                      <span>Save</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsEditing(false);
+                        setErrors({});
+                      }}
+                      className="profile-cancel-button"
+                    >
+                      <FiX className="profile-button-icon" />
+                      <span>Cancel</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="profile-card-body">
+                <div className="profile-form-grid">
+                  <div className="profile-form-group">
+                    <label className="profile-form-label">First Name</label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={userData.first_name || ''}
+                        onChange={(e) => handleInputChange('first_name', e.target.value)}
+                        className={`profile-form-input ${errors.first_name ? 'profile-input-error' : ''}`}
+                      />
+                    ) : (
+                      <p className="profile-info-text">{userData.first_name || 'Not provided'}</p>
+                    )}
+                    {errors.first_name && <p className="profile-error-message">{errors.first_name[0]}</p>}
+                  </div>
+
+                  <div className="profile-form-group">
+                    <label className="profile-form-label">Last Name</label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        value={userData.last_name || ''}
+                        onChange={(e) => handleInputChange('last_name', e.target.value)}
+                        className={`profile-form-input ${errors.last_name ? 'profile-input-error' : ''}`}
+                      />
+                    ) : (
+                      <p className="profile-info-text">{userData.last_name || 'Not provided'}</p>
+                    )}
+                    {errors.last_name && <p className="profile-error-message">{errors.last_name[0]}</p>}
+                  </div>
+                </div>
+
+                <div className="profile-form-group">
+                  <label className="profile-form-label">Email Address</label>
+                  <p className="profile-info-text">{userData.email}</p>
+                  <p className="profile-info-note">Email cannot be changed</p>
+                </div>
+
+                <div className="profile-form-group">
+                  <label className="profile-form-label">Role</label>
+                  <span className="profile-role-badge">
+                    {userData.role}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Security Settings */}
+          <div className="profile-security-section">
+            <div className="profile-card">
+              <div className="profile-card-header">
+                <h2 className="profile-card-title">Security</h2>
+              </div>
+
+              <div className="profile-card-body">
+                <div className="profile-security-content">
+                  <div className="profile-security-item">
+                    <h3 className="profile-security-title">Password</h3>
+                    <p className="profile-security-description">Keep your account secure with a strong password</p>
+                    
+                    {!showPasswordForm ? (
+                      <button
+                        onClick={() => setShowPasswordForm(true)}
+                        className="profile-change-password-button"
+                      >
+                        <FiLock className="profile-button-icon" />
+                        <span>Change Password</span>
+                      </button>
+                    ) : (
+                      <div className="profile-password-form">
+                        <div className="profile-form-group">
+                          <label className="profile-form-label">Current Password</label>
+                          <div className="profile-password-input-wrapper">
+                            <input
+                              type={showPasswords.old ? 'text' : 'password'}
+                              value={passwordData.old_password}
+                              onChange={(e) => handlePasswordChange('old_password', e.target.value)}
+                              className={`profile-form-input ${errors.old_password ? 'profile-input-error' : ''}`}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => togglePasswordVisibility('old')}
+                              className="profile-password-toggle"
+                            >
+                              {showPasswords.old ? <FiEyeOff /> : <FiEye />}
+                            </button>
+                          </div>
+                          {errors.old_password && <p className="profile-error-message">{errors.old_password[0]}</p>}
                         </div>
-                      ))}
-                    </td>
-                    <td>${order.totalPrice.toFixed(2)}</td>
-                    <td>{new Date(order.timestamp).toLocaleDateString()}</td>
-                    <td>
-                      <span className={`order-status ${order.status.toLowerCase()}`}>
-                        {order.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+
+                        <div className="profile-form-group">
+                          <label className="profile-form-label">New Password</label>
+                          <div className="profile-password-input-wrapper">
+                            <input
+                              type={showPasswords.new ? 'text' : 'password'}
+                              value={passwordData.new_password}
+                              onChange={(e) => handlePasswordChange('new_password', e.target.value)}
+                              className={`profile-form-input ${errors.new_password ? 'profile-input-error' : ''}`}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => togglePasswordVisibility('new')}
+                              className="profile-password-toggle"
+                            >
+                              {showPasswords.new ? <FiEyeOff /> : <FiEye />}
+                            </button>
+                          </div>
+                          {errors.new_password && <p className="profile-error-message">{errors.new_password[0]}</p>}
+                        </div>
+
+                        <div className="profile-form-group">
+                          <label className="profile-form-label">Confirm New Password</label>
+                          <div className="profile-password-input-wrapper">
+                            <input
+                              type={showPasswords.confirm ? 'text' : 'password'}
+                              value={passwordData.confirm_new_password}
+                              onChange={(e) => handlePasswordChange('confirm_new_password', e.target.value)}
+                              className={`profile-form-input ${errors.confirm_new_password ? 'profile-input-error' : ''}`}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => togglePasswordVisibility('confirm')}
+                              className="profile-password-toggle"
+                            >
+                              {showPasswords.confirm ? <FiEyeOff /> : <FiEye />}
+                            </button>
+                          </div>
+                          {errors.confirm_new_password && <p className="profile-error-message">{errors.confirm_new_password[0]}</p>}
+                        </div>
+
+                        <div className="profile-password-actions">
+                          <button
+                            onClick={changePassword}
+                            disabled={loading}
+                            className="profile-save-password-button"
+                          >
+                            Update Password
+                          </button>
+                          <button
+                            onClick={() => {
+                              setShowPasswordForm(false);
+                              setPasswordData({
+                                old_password: '',
+                                new_password: '',
+                                confirm_new_password: ''
+                              });
+                              setErrors({});
+                            }}
+                            className="profile-cancel-password-button"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      if (window.confirm('Are you sure you want to log out?')) {
+                        logout();
+                        navigate(appLinks.Login);
+                      }
+                    }}
+                    className="profile-logout-button"
+                  >
+                    <FiLogOut className="profile-button-icon" />
+                    <span>Log Out</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

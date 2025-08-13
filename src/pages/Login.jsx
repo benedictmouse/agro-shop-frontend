@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+// src/pages/Login.js
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
+import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 import appLinks from '../routing/Links';
 import '../styles/Login.css';
 
 const Login = () => {
+  const { login } = useContext(AuthContext); // Use context
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -15,15 +19,14 @@ const Login = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setFormMessage('');
 
-    // Basic validation
     if (!formData.email || !formData.password) {
       setFormMessage('Please fill in all fields.');
       setIsSubmitting(false);
@@ -35,21 +38,29 @@ const Login = () => {
       return;
     }
 
-    // Simulate authentication (replace with real backend call)
-    const mockUser = { email: 'user@agroshop.com', password: 'password123' };
-    if (formData.email === mockUser.email && formData.password === mockUser.password) {
+    try {
+      const response = await axios.post('http://localhost:8000/api/token/', {
+        email: formData.email,
+        password: formData.password,
+      });
+
+      // Use context to set auth state
+      login(response.data.access, response.data.refresh);
+
+      setFormMessage('Login successful! Redirecting...');
+      setFormData({ email: '', password: '' });
+      setIsSubmitting(false);
+
       setTimeout(() => {
-        setFormMessage('Login successful! Redirecting...');
-        setFormData({ email: '', password: '' });
-        setIsSubmitting(false);
-        // TODO: Store auth token or user data in context/localStorage
-        navigate(appLinks.profile);
+        navigate(appLinks.home);
       }, 1000);
-    } else {
-      setTimeout(() => {
+    } catch (error) {
+      setIsSubmitting(false);
+      if (error.response && error.response.status === 401) {
         setFormMessage('Invalid email or password.');
-        setIsSubmitting(false);
-      }, 1000);
+      } else {
+        setFormMessage('An error occurred. Please try again later.');
+      }
     }
   };
 
