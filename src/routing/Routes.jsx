@@ -17,6 +17,7 @@ const Contact = React.lazy(() => import('../pages/Contact'));
 const About = React.lazy(() => import('../pages/About'));
 const Login = React.lazy(() => import('../pages/Login'));
 const Signup = React.lazy(() => import('../components/Signup'));
+const OrderManagement = React.lazy(() => import('../pages/OrdersManagement'));
 
 const LoadingFallback = () => (
   <div className="loading-container">
@@ -47,6 +48,7 @@ const AppContent = ({ cartItem, setCartItem, products, setProducts, handleAddPro
           <Route path={appLinks?.about} element={<About />} />
           <Route path={appLinks?.Login} element={<Login />} />
           <Route path={appLinks?.signup} element={<Signup />} />
+          <Route path={appLinks?.ordermanagement} element ={<OrderManagement/>}/>
           <Route path={appLinks?.addProduct} element={<AddProduct onAddProduct={handleAddProduct} />} />
           <Route path={appLinks?.dashboard} element={<Dashboard products={products} onDeleteProduct={handleDeleteProduct} />} />
         </Routes>

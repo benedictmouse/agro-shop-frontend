@@ -1,21 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { IoMdAdd } from "react-icons/io";
 import '../styles/AddProduct.css';
+import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 
 const AddProduct = ({ onAddProduct }) => {
+  const { isAuthenticated } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    newPrice: '',
+    price: '',
     stock: '',
     category: '',
-    company: '',
-    color: '',
     image: null
   });
-
   const [imagePreview, setImagePreview] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,6 +24,7 @@ const AddProduct = ({ onAddProduct }) => {
       ...prev,
       [name]: value
     }));
+    setError(null); // Clear errors on input change
   };
 
   const handleImageChange = (e) => {
@@ -32,8 +34,6 @@ const AddProduct = ({ onAddProduct }) => {
         ...prev,
         image: file
       }));
-      
-      // Create preview URL
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
@@ -42,51 +42,86 @@ const AddProduct = ({ onAddProduct }) => {
     }
   };
 
-  const generateProductId = () => {
-    return Date.now(); // Simple ID generation
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isAuthenticated) {
+      setError('You must be logged in as a vendor to add a product.');
+      return;
+    }
+
     setIsSubmitting(true);
+    setError(null);
 
     try {
-      // Create new product object
-      const newProduct = {
-        ID: generateProductId(),
-        img: imagePreview, // In a real app, you'd upload to a server
-        title: formData.title,
-        stock: formData.stock,
-        reviews: "(0 reviews)",
-        newPrice: formData.newPrice,
-        company: formData.company,
-        color: formData.color,
-        category: formData.category,
-        Description: formData.description
-      };
+      const formDataToSend = new FormData();
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('price', formData.price);
+      formDataToSend.append('stock', formData.stock);
+      if (formData.category) {
+        formDataToSend.append('category', formData.category);
+      }
+      if (formData.image) {
+        formDataToSend.append('image', formData.image);
+      }
 
-      // Call the callback function to add product
+      // Debug: Log what we're sending
+      console.log('Sending data:');
+      for (let [key, value] of formDataToSend.entries()) {
+        console.log(key, value);
+      }
+
+      const token = localStorage.getItem('access_token');
+      console.log('Token:', token ? 'Present' : 'Missing');
+      
+      const response = await axios.post('http://localhost:8000/products/create/', formDataToSend, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          // Remove Content-Type to let browser set it automatically with boundary
+        }
+      });
+
+      // Call the callback function to add product locally (if needed)
       if (onAddProduct) {
-        onAddProduct(newProduct);
+        onAddProduct(response.data);
       }
 
       // Reset form
       setFormData({
         title: '',
         description: '',
-        newPrice: '',
+        price: '',
         stock: '',
         category: '',
-        company: '',
-        color: '',
         image: null
       });
       setImagePreview(null);
-      
       alert('Product added successfully!');
     } catch (error) {
-      alert('Error adding product. Please try again.');
       console.error('Error adding product:', error);
+      console.error('Error response:', error.response?.data);
+      console.error('Error status:', error.response?.status);
+      console.error('Error headers:', error.response?.headers);
+      
+      // Better error handling
+      if (error.response?.status === 401) {
+        setError('Your session has expired. Please log in again.');
+      } else if (error.response?.status === 403) {
+        setError('You do not have permission to add products. Make sure you are logged in as a vendor.');
+      } else if (error.response?.data) {
+        // Handle Django validation errors
+        const errorMessages = [];
+        Object.entries(error.response.data).forEach(([field, messages]) => {
+          if (Array.isArray(messages)) {
+            errorMessages.push(`${field}: ${messages.join(', ')}`);
+          } else {
+            errorMessages.push(`${field}: ${messages}`);
+          }
+        });
+        setError(errorMessages.join(' | '));
+      } else {
+        setError('Error adding product. Please check your connection and try again.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -98,6 +133,8 @@ const AddProduct = ({ onAddProduct }) => {
         <h2>Add New Product</h2>
         <p>Fill in the details below to add a new product to your inventory</p>
       </div>
+
+      {error && <div className="error-message">{error}</div>}
 
       <form onSubmit={handleSubmit} className="add-product-form">
         <div className="form-group image-upload">
@@ -117,7 +154,6 @@ const AddProduct = ({ onAddProduct }) => {
             accept="image/*"
             onChange={handleImageChange}
             className="image-input"
-            required
           />
         </div>
 
@@ -135,13 +171,15 @@ const AddProduct = ({ onAddProduct }) => {
           </div>
 
           <div className="form-group">
-            <label>Company</label>
+            <label>Price ($)</label>
             <input
-              type="text"
-              name="company"
-              value={formData.company}
+              type="number"
+              name="price"
+              value={formData.price}
               onChange={handleInputChange}
-              placeholder="Enter company name"
+              placeholder="Enter price"
+              min="0"
+              step="0.01"
               required
             />
           </div>
@@ -161,20 +199,6 @@ const AddProduct = ({ onAddProduct }) => {
 
         <div className="form-row">
           <div className="form-group">
-            <label>Price ($)</label>
-            <input
-              type="number"
-              name="newPrice"
-              value={formData.newPrice}
-              onChange={handleInputChange}
-              placeholder="Enter price"
-              min="0"
-              step="0.01"
-              required
-            />
-          </div>
-
-          <div className="form-group">
             <label>Stock Quantity</label>
             <input
               type="number"
@@ -186,47 +210,23 @@ const AddProduct = ({ onAddProduct }) => {
               required
             />
           </div>
-        </div>
 
-        <div className="form-row">
           <div className="form-group">
             <label>Category</label>
-            <select
+            <input
+              type="text"
               name="category"
               value={formData.category}
               onChange={handleInputChange}
-              required
-            >
-              <option value="">Select category</option>
-              <option value="sneakers">Sneakers</option>
-              <option value="sandals">Sandals</option>
-              <option value="flats">Flats</option>
-              <option value="heels">Heels</option>
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>Color</label>
-            <select
-              name="color"
-              value={formData.color}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="">Select color</option>
-              <option value="black">Black</option>
-              <option value="white">White</option>
-              <option value="red">Red</option>
-              <option value="blue">Blue</option>
-              <option value="green">Green</option>
-            </select>
+              placeholder="Enter category name"
+            />
           </div>
         </div>
 
         <button 
           type="submit" 
           className="submit-btn"
-          disabled={isSubmitting}
+          disabled={isSubmitting || !isAuthenticated}
         >
           {isSubmitting ? 'Adding Product...' : 'Add Product'}
         </button>

@@ -1,3 +1,5 @@
+
+
 const appLinks ={
 
 home:'/',
@@ -10,7 +12,9 @@ addProduct:'/add-product',
 checkout:'/checkout',
 about:'/about',
 contact:'/contact',
-dashboard:'/dasboard'
+dashboard:'/dasboard',
+ordermanagement : '/order'
+
 }
 
 export default appLinks;

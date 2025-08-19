@@ -1,23 +1,131 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FiShoppingCart, FiUser, FiX, FiHome, FiInfo, FiMail } from 'react-icons/fi';
+import { FiShoppingCart, FiUser, FiX, FiHome, FiInfo, FiMail, FiLogOut } from 'react-icons/fi';
 import { LuLayoutDashboard } from "react-icons/lu";
 import { BiMenuAltLeft } from 'react-icons/bi';
 import { RiArrowDropDownLine } from 'react-icons/ri';
+import { AuthContext } from '../context/AuthContext';
 import logo from '../assets/Agro Shop logo.png';
 import '../styles/Navbar.css';
 import appLinks from '../routing/Links';
 
-const Navbar = ({cartItem}) => {
+const Navbar = ({ cartItem }) => {
+    const { isAuthenticated, logout } = useContext(AuthContext);
+    const [userInfo, setUserInfo] = useState(null);
+    const [cartCount, setCartCount] = useState(0);
+    
+    // Fetch user info from backend when authenticated
+    const fetchUserInfo = async () => {
+        if (!isAuthenticated) {
+            setUserInfo(null);
+            return;
+        }
+        
+        try {
+            const token = localStorage.getItem('access_token');
+            const response = await fetch('http://localhost:8000/users/profile/', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                setUserInfo(data);
+                // Store user info in localStorage for quick access
+                localStorage.setItem('user_info', JSON.stringify(data));
+            } else {
+                console.error('Failed to fetch user info:', response.status);
+            }
+        } catch (error) {
+            console.error('Failed to fetch user info:', error);
+            // Fallback to localStorage data if available
+            const storedUserInfo = localStorage.getItem('user_info');
+            if (storedUserInfo) {
+                setUserInfo(JSON.parse(storedUserInfo));
+            }
+        }
+    };
 
-    const cartCount = Array.isArray(cartItem) 
-    ? cartItem.reduce((total, item) => total + (item.quantity || 0), 0) 
-    : 0;
+    // Fetch cart data from backend
+    const fetchCartData = async () => {
+        if (!isAuthenticated) {
+            setCartCount(0);
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem('access_token');
+            const response = await fetch('http://localhost:8000/cart/', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                // Calculate total items from cart items
+                const totalItems = data.items?.reduce((total, item) => total + (item.quantity || 0), 0) || 0;
+                setCartCount(totalItems);
+            } else {
+                console.error('Failed to fetch cart data:', response.status);
+                setCartCount(0);
+            }
+        } catch (error) {
+            console.error('Failed to fetch cart data:', error);
+            setCartCount(0);
+        }
+    };
+
+    // Initialize user info from localStorage if available
+    useEffect(() => {
+        if (isAuthenticated) {
+            const storedUserInfo = localStorage.getItem('user_info');
+            if (storedUserInfo) {
+                try {
+                    setUserInfo(JSON.parse(storedUserInfo));
+                } catch (e) {
+                    console.error('Error parsing stored user info:', e);
+                    localStorage.removeItem('user_info');
+                }
+            }
+            // Always fetch fresh data from backend
+            fetchUserInfo();
+            fetchCartData();
+            
+            // Set up interval to refresh cart count periodically
+            const cartInterval = setInterval(fetchCartData, 30000); // Every 30 seconds
+            return () => clearInterval(cartInterval);
+        } else {
+            setUserInfo(null);
+            setCartCount(0);
+            localStorage.removeItem('user_info');
+        }
+    }, [isAuthenticated]);
+
+    // Also check for prop-based cart data as fallback
+    useEffect(() => {
+        if (cartItem && Array.isArray(cartItem)) {
+            const propCartCount = cartItem.reduce((total, item) => total + (item.quantity || 0), 0);
+            // Only use prop count if we don't have API data or if prop count is higher
+            if (!isAuthenticated || propCartCount > cartCount) {
+                setCartCount(propCartCount);
+            }
+        }
+    }, [cartItem, isAuthenticated, cartCount]);
+
+    const userRole = userInfo?.role || 'customer'; // Default to customer if no role found
+
+
+        
     const location = useLocation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
-    // const [searchQuery, setSearchQuery] = useState('');
     const userMenuRef = useRef(null);
     const mobileMenuRef = useRef(null);
     const menuButtonRef = useRef(null);
@@ -61,6 +169,18 @@ const Navbar = ({cartItem}) => {
 
     const toggleUserMenu = () => setIsUserMenuOpen(prev => !prev);
 
+    const handleLogout = () => {
+        logout();
+        setUserInfo(null);
+        setCartCount(0);
+        localStorage.removeItem('user_info');
+        setIsUserMenuOpen(false);
+        closeMobileMenu();
+    };
+
+    // Check if user can see dashboard (vendors and admins only)
+    const canSeeDashboard = userRole === 'vendor' || userRole === 'admin';
+
     return (
         <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
             <div className="navbar-container">
@@ -79,9 +199,14 @@ const Navbar = ({cartItem}) => {
                             <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>
                                 <span>Home</span>
                             </Link>
-                            <Link to={appLinks.dashboard} className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`}>
-                                <span>Dashboard</span>
-                            </Link>
+                            
+                            {/* Only show Dashboard for vendors and admins */}
+                            {canSeeDashboard && (
+                                <Link to={appLinks.dashboard} className={`nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`}>
+                                    <span>Dashboard</span>
+                                </Link>
+                            )}
+                            
                             <Link to="/about" className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`}>
                                 <span>About</span>
                             </Link>
@@ -92,11 +217,10 @@ const Navbar = ({cartItem}) => {
                     </div>
 
                     <div className="desktop-icons">
-                        
                         <Link to="/cart" className="icon-button cart-link">
                             <div className="icon-wrapper">
                                 <FiShoppingCart className="icon" />
-                                <span className="cart-badge pulse">{cartCount}</span>
+                                {cartCount > 0 && <span className="cart-badge pulse">{cartCount}</span>}
                                 <span className="icon-tooltip">Cart</span>
                             </div>
                         </Link>
@@ -115,26 +239,45 @@ const Navbar = ({cartItem}) => {
                             </button>
 
                             <div className={`user-menu-dropdown ${isUserMenuOpen ? 'open' : ''}`}>
-                                <div className="user-info">
-                                    <div className="user-avatar">AS</div>
-                                    <div className="user-details">
-                                        <div className="user-name">Agro Shopper</div>
-                                        <div className="user-email">user@agroshop.com</div>
-                                    </div>
-                                </div>
-                                <Link to="/profile" className="user-menu-item" onClick={toggleUserMenu}>
-                                    <span>My Profile</span>
-                                </Link>
-                                <Link to="/orders" className="user-menu-item" onClick={toggleUserMenu}>
-                                    <span>My Orders</span>
-                                </Link>
-                                <div className="dropdown-divider"></div>
-                                <Link to="/login" className="user-menu-item" onClick={toggleUserMenu}>
-                                    <span>Login</span>
-                                </Link>
-                                <Link to="/signup" className="user-menu-item signup-item" onClick={toggleUserMenu}>
-                                    <span>Create Account</span>
-                                </Link>
+                                {isAuthenticated ? (
+                                    <>
+                                        <div className="user-info">
+                                            <div className="user-avatar">
+                                                {userInfo?.first_name ? userInfo.first_name.charAt(0).toUpperCase() : 
+                                                 userInfo?.username ? userInfo.username.charAt(0).toUpperCase() : 'U'}
+                                            </div>
+                                            <div className="user-details">
+                                                <div className="user-name">
+                                                    {userInfo?.first_name && userInfo?.last_name 
+                                                        ? `${userInfo.first_name} ${userInfo.last_name}`
+                                                        : userInfo?.username || 'User'}
+                                                </div>
+                                                <div className="user-email">{userInfo?.email || 'user@agroshop.com'}</div>
+                                                <div className="user-role">{userRole.charAt(0).toUpperCase() + userRole.slice(1)}</div>
+                                            </div>
+                                        </div>
+                                        <Link to="/profile" className="user-menu-item" onClick={toggleUserMenu}>
+                                            <span>My Profile</span>
+                                        </Link>
+                                        <Link to="/order" className="user-menu-item" onClick={toggleUserMenu}>
+                                            <span>My Orders</span>
+                                        </Link>
+                                        <div className="dropdown-divider"></div>
+                                        <button className="user-menu-item logout-button" onClick={handleLogout}>
+                                            <FiLogOut style={{ marginRight: '8px' }} />
+                                            <span>Logout</span>
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Link to="/login" className="user-menu-item" onClick={toggleUserMenu}>
+                                            <span>Login</span>
+                                        </Link>
+                                        <Link to="/signup" className="user-menu-item signup-item" onClick={toggleUserMenu}>
+                                            <span>Create Account</span>
+                                        </Link>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -171,13 +314,22 @@ const Navbar = ({cartItem}) => {
                                 <FiHome className="mobile-nav-icon" />
                                 <span>Home</span>
                             </Link>
-                            <Link to={appLinks.dashboard} className={`mobile-nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`} onClick={closeMobileMenu}>
-                                <LuLayoutDashboard className="mobile-nav-icon" />
-                                <span>Dashboard</span>
-                            </Link>
+                            
+                            {/* Only show Dashboard for vendors and admins in mobile menu */}
+                            {canSeeDashboard && (
+                                <Link to={appLinks.dashboard} className={`mobile-nav-link ${location.pathname === '/dashboard' ? 'active' : ''}`} onClick={closeMobileMenu}>
+                                    <LuLayoutDashboard className="mobile-nav-icon" />
+                                    <span>Dashboard</span>
+                                </Link>
+                            )}
+                            
                             <Link to="/about" className={`mobile-nav-link ${location.pathname === '/about' ? 'active' : ''}`} onClick={closeMobileMenu}>
                                 <FiInfo className="mobile-nav-icon" />
                                 <span>About</span>
+                            </Link>
+                            <Link to="/order" className={`mobile-nav-link ${location.pathname === '/order' ? 'active' : ''}`} onClick={closeMobileMenu}>
+                                <FiInfo className="mobile-nav-icon" />
+                                <span>Orders</span>
                             </Link>
                             <Link to="/contact" className={`mobile-nav-link ${location.pathname === '/contact' ? 'active' : ''}`} onClick={closeMobileMenu}>
                                 <FiMail className="mobile-nav-icon" />
@@ -186,23 +338,35 @@ const Navbar = ({cartItem}) => {
 
                             <div className="mobile-menu-divider" />
 
-                            <Link to="/profile" className="mobile-nav-link" onClick={closeMobileMenu}>
-                                <FiUser className="mobile-nav-icon" />
-                                <span>My Profile</span>
-                            </Link>
+                            {isAuthenticated && (
+                                <Link to="/profile" className="mobile-nav-link" onClick={closeMobileMenu}>
+                                    <FiUser className="mobile-nav-icon" />
+                                    <span>My Profile</span>
+                                </Link>
+                            )}
+                            
                             <Link to="/cart" className="mobile-nav-link" onClick={closeMobileMenu}>
                                 <FiShoppingCart className="mobile-nav-icon" />
-                                <span>My Cart ({cartCount})</span>
+                                <span>My Cart {cartCount > 0 && `(${cartCount})`}</span>
                             </Link>
 
                             <div className="mobile-menu-divider" />
 
-                            <Link to="/login" className="mobile-nav-link" onClick={closeMobileMenu}>
-                                <span>Login</span>
-                            </Link>
-                            <Link to="/signup" className="mobile-nav-link" onClick={closeMobileMenu}>
-                                <span style={{ color: 'var(--primary)' }}>Create Account</span>
-                            </Link>
+                            {isAuthenticated ? (
+                                <button className="mobile-nav-link logout-mobile" onClick={handleLogout}>
+                                    <FiLogOut className="mobile-nav-icon" />
+                                    <span>Logout</span>
+                                </button>
+                            ) : (
+                                <>
+                                    <Link to="/login" className="mobile-nav-link" onClick={closeMobileMenu}>
+                                        <span>Login</span>
+                                    </Link>
+                                    <Link to="/signup" className="mobile-nav-link" onClick={closeMobileMenu}>
+                                        <span style={{ color: 'var(--primary)' }}>Create Account</span>
+                                    </Link>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
