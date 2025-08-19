@@ -23,7 +23,7 @@ const Navbar = ({ cartItem }) => {
         
         try {
             const token = localStorage.getItem('access_token');
-            const response = await fetch('http://localhost:8000/users/profile/', {
+            const response = await fetch('https://agroshopp.onrender.com/users/profile/', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -58,7 +58,7 @@ const Navbar = ({ cartItem }) => {
 
         try {
             const token = localStorage.getItem('access_token');
-            const response = await fetch('http://localhost:8000/cart/', {
+            const response = await fetch('https://agroshopp.onrender.com/cart/', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,

@@ -39,7 +39,7 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:8000/api/token/', {
+      const response = await axios.post('https://agroshopp.onrender.com/api/token/', {
         email: formData.email,
         password: formData.password,
       });

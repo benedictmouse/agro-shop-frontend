@@ -18,7 +18,7 @@ const OrderItem = ({ orderUuid, userRole }) => {
   const [message, setMessage] = useState({ type: '', text: '' });
 
   // Base API URL - make sure this matches your Django server
-  const API_BASE_URL = 'http://localhost:8000';
+  const API_BASE_URL = 'https://agroshopp.onrender.com';
 
   // Get auth token
   const getAuthToken = () => localStorage.getItem('access_token');
@@ -533,7 +533,7 @@ const OrderItemDemo = ({ userRole = 'customer' }) => {
   const [loading, setLoading] = useState(false);
 
   // Base API URL
-  const API_BASE_URL = 'http://localhost:8000';
+  const API_BASE_URL = 'https://agroshopp.onrender.com';
 
   // Function to test with customer orders list first
   const fetchCustomerOrders = async () => {

@@ -19,7 +19,7 @@ const Dashboard = () => {
 
     // Create axios instance with interceptors for token handling
     const api = axios.create({
-        baseURL: 'http://localhost:8000',
+        baseURL: 'https://agroshopp.onrender.com',
     });
 
     // Add token to all requests
@@ -173,7 +173,7 @@ const Dashboard = () => {
     const getImageUrl = (imageUrl) => {
         if (!imageUrl) return '/placeholder-image.jpg';
         if (imageUrl.startsWith('http')) return imageUrl;
-        return `http://localhost:8000${imageUrl}`;
+        return `https://agroshopp.onrender.com${imageUrl}`;
     };
 
     if (!isAuthenticated) {
