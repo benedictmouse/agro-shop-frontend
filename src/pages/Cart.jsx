@@ -419,10 +419,6 @@ const Cart = () => {
                     <span>Tax (0%)</span>
                     <span>Ksh {tax.toFixed(2)}</span>
                   </div>
-                  <div className="summary-row">
-                    <span>Shipping</span>
-                    <span>{shipping === 0 ? 'FREE' : `Ksh ${shipping.toFixed(0)}`}</span>
-                  </div>
                   <div className="summary-row total">
                     <span>Total</span>
                     <span>Ksh {total.toFixed(0)}</span>
@@ -606,9 +602,7 @@ const Cart = () => {
             <div className="payment-methods">
               <p>We accept:</p>
               <div className="payment-icons">
-                <span className="payment-icon visa">Visa</span>
-                <span className="payment-icon mastercard">Mastercard</span>
-                <span className="payment-icon amex">Amex</span>
+                
                 <span className="payment-icon mpesa">M-Pesa</span>
               </div>
             </div>
