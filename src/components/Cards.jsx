@@ -9,7 +9,7 @@ const Cards = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://agroshopp.onrender.com/';
+  const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://agroshopp.onrender.com';
 
   // Fetch products from Django backend
   useEffect(() => {
