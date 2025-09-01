@@ -27,7 +27,7 @@ const Footer = () => {
         <div className="footer-section footer-about">
           <h3 className="footer-title">AgroShop</h3>
           <p className="footer-description">
-            Your one-stop shop for fresh, organic produce. Discover quality products delivered straight from the farm to your table.
+            Your one-stop shop for Agricultural input. Discover quality products delivered straight to the farm .
           </p>
         </div>
 
@@ -35,7 +35,6 @@ const Footer = () => {
           <h3 className="footer-title">Quick Links</h3>
           <ul className="footer-nav">
             <li><Link to={appLinks.home} className="footer-link">Home</Link></li>
-            <li><Link to={appLinks.dashboard} className="footer-link">Dashboard</Link></li>
             <li><Link to="/about" className="footer-link">About</Link></li>
             <li><Link to="/contact" className="footer-link">Contact</Link></li>
             <li><Link to={appLinks.profile} className="footer-link">My Profile</Link></li>
