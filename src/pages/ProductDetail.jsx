@@ -15,7 +15,7 @@ const ProductDetail = () => {
   const [addingToCart, setAddingToCart] = useState(false);
 
   // Fixed: Remove trailing slash from API_BASE_URL to avoid double slashes
-  const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+  const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://agroshopp.onrender.com';
 
   // Fetch single product from Django backend
   useEffect(() => {
