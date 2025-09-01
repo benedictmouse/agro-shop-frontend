@@ -325,7 +325,7 @@ const Dashboard = () => {
                                                 {product.category?.name || 'Uncategorized'}
                                             </span>
                                         </td>
-                                        <td>${parseFloat(product.price).toFixed(2)}</td>
+                                        <td>KSH{parseFloat(product.price).toFixed(2)}</td>
                                         <td>{product.stock}</td>
                                         <td>
                                             <span className={`stock-status ${stockStatus.class}`}>
