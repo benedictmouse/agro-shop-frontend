@@ -314,7 +314,7 @@ const Dashboard = () => {
                                                 <span className="product-title">{product.title}</span>
                                                 <span className="product-description">
                                                     {product.description.length > 50 
-                                                        ? `${product.description.substring(0, 50)}...`
+                                                        ? `KSH {product.description.substring(0, 50)}...`
                                                         : product.description
                                                     }
                                                 </span>
