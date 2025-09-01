@@ -101,7 +101,7 @@ const Cards = () => {
   return (
     <section className="cards-section">
       <div className="cards-header">
-        <h2 className="section-title">Fresh Produce</h2>
+        <h2 className="section-title">Start Shopping</h2>
         
         {/* Search Input */}
         <div className="search-container">
