@@ -70,7 +70,7 @@ const Signup = () => {
 
     try {
       // Register user
-      await axios.post('https://agroshopp.onrender.com/users/register/', {
+      await axios.post('http://localhost:8000/users/register/', {
         email: signupData.email,
         password: signupData.password,
         password2: signupData.confirmPassword,
@@ -80,7 +80,7 @@ const Signup = () => {
       });
 
       // Automatically log in
-      const loginResponse = await axios.post('https://agroshopp.onrender.com/api/token/', {
+      const loginResponse = await axios.post('http://localhost:8000/api/token/', {
         email: signupData.email,
         password: signupData.password,
       });
@@ -151,7 +151,7 @@ const Signup = () => {
     }
 
     try {
-      await axios.post('https://agroshopp.onrender.com/users/changepassword/', {
+      await axios.post('http://localhost:8000/users/changepassword/', {
         old_password: passwordChangeData.oldPassword,
         new_password: passwordChangeData.newPassword,
       }, {

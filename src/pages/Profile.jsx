@@ -51,7 +51,7 @@ const Profile = () => {
       const refresh = localStorage.getItem('refresh_token');
       if (!refresh) throw new Error('No refresh token available');
       
-      const response = await axios.post('https://agroshopp.onrender.com/api/token/refresh/', { refresh }, {
+      const response = await axios.post('http://localhost:8000/api/token/refresh/', { refresh }, {
         headers: { 'Content-Type': 'application/json' }
       });
       
@@ -90,7 +90,7 @@ const Profile = () => {
   const fetchProfile = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('https://agroshopp.onrender.com/users/profile/', { headers: getHeaders() });
+      const response = await axios.get('http://localhost:8000/users/profile/', { headers: getHeaders() });
       setUserData(response.data);
     } catch (error) {
       setMessage({ type: 'error', text: 'Failed to load profile data' });
@@ -106,7 +106,7 @@ const Profile = () => {
       setLoading(true);
       setErrors({});
       
-      const response = await axios.patch('https://agroshopp.onrender.com/users/profile/', {
+      const response = await axios.patch('http://localhost:8000/users/profile/', {
         first_name: userData.first_name,
         last_name: userData.last_name
       }, { headers: getHeaders() });
@@ -142,7 +142,7 @@ const Profile = () => {
         return;
       }
 
-      const response = await axios.patch('https://agroshopp.onrender.com/users/changepassword/', passwordData, {
+      const response = await axios.patch('http://localhost:8000/users/changepassword/', passwordData, {
         headers: getHeaders()
       });
 

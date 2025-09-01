@@ -74,7 +74,7 @@ const AddProduct = ({ onAddProduct }) => {
       const token = localStorage.getItem('access_token');
       console.log('Token:', token ? 'Present' : 'Missing');
       
-      const response = await axios.post('https://agroshopp.onrender.com/products/create/', formDataToSend, {
+      const response = await axios.post('http://localhost:8000/products/create/', formDataToSend, {
         headers: {
           'Authorization': `Bearer ${token}`,
           // Remove Content-Type to let browser set it automatically with boundary
