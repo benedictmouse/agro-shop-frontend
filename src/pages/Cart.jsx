@@ -415,10 +415,6 @@ const Cart = () => {
                     <span>Subtotal</span>
                     <span>Ksh {subtotal.toFixed(2)}</span>
                   </div>
-                  <div className="summary-row">
-                    <span>Tax (0%)</span>
-                    <span>Ksh {tax.toFixed(2)}</span>
-                  </div>
                   <div className="summary-row total">
                     <span>Total</span>
                     <span>Ksh {total.toFixed(0)}</span>
